@@ -668,8 +668,8 @@ export async function getCustomerOrders(customerId = "cus-maria-fernandez"): Pro
       shippingPostalCode: order.shipping_postal_code,
       shippingPhone: order.shipping_phone,
       promotionLabel: order.promotion_label,
-      promotionDiscountTotal: order.promotion_discount_total,
-      loyaltyDiscountTotal: order.loyalty_discount_total,
+      promotionDiscountTotal: order.promotion_discount_total ?? 0,
+      loyaltyDiscountTotal: order.loyalty_discount_total ?? 0,
       discountTotalLabel: order.discount_total ? formatCurrency(order.discount_total) : undefined,
       items: order.items.map((item) => ({
         productSlug: item.product_slug,
@@ -706,8 +706,8 @@ export async function getCustomerOrder(orderId: string): Promise<CustomerOrder |
       shippingPostalCode: data.shipping_postal_code,
       shippingPhone: data.shipping_phone,
       promotionLabel: data.promotion_label,
-      promotionDiscountTotal: data.promotion_discount_total,
-      loyaltyDiscountTotal: data.loyalty_discount_total,
+      promotionDiscountTotal: data.promotion_discount_total ?? 0,
+      loyaltyDiscountTotal: data.loyalty_discount_total ?? 0,
       discountTotalLabel: data.discount_total ? formatCurrency(data.discount_total) : undefined,
       items: data.items.map((item) => ({
         productSlug: item.product_slug,
