@@ -9,6 +9,7 @@ import {
   updateAdminPromotion,
   type Promotion
 } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type PromotionType = "percentage" | "fixed" | "combo";
 
@@ -40,13 +41,18 @@ export function AdminPromotionsPage() {
   const [selectedId, setSelectedId] = useState<string>("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
     getAdminPromotions().then((data) => {
       if (!active) return;
       setPromotions(data);
       setSelectedId(data[0]?.id ?? "");
+      setLoading(false);
+    }).catch(() => {
+      if (active) setLoading(false);
     });
     return () => {
       active = false;
@@ -126,6 +132,10 @@ export function AdminPromotionsPage() {
     } catch {
       setError("No se pudo eliminar la promocion.");
     }
+  }
+
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (

@@ -2,19 +2,26 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getCatalogProducts, getPromotions, type CatalogProduct, type Promotion } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function CombosPage() {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [products, setProducts] = useState<CatalogProduct[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
 
-    getPromotions(true).then((data) => {
+    const promosPromise = getPromotions(true).then((data) => {
       if (active) setPromotions(data);
     });
-    getCatalogProducts().then((data) => {
+    const productsPromise = getCatalogProducts().then((data) => {
       if (active) setProducts(data);
+    });
+
+    Promise.all([promosPromise, productsPromise]).finally(() => {
+      if (active) setLoading(false);
     });
 
     return () => {
@@ -42,6 +49,10 @@ export function CombosPage() {
       return null;
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <main className="px-5 py-16 md:px-8 lg:px-12">

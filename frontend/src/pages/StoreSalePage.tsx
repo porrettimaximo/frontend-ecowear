@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 import {
   getAdminProducts,
   submitStoreSale,
   type AdminProduct,
   type CatalogVariant
 } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type StoreDraftItem = {
   productSlug: string;
@@ -33,9 +33,11 @@ export function StoreSalePage() {
   const [invoiceBusinessName, setInvoiceBusinessName] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
 
     getAdminProducts()
       .then((data) => {
@@ -60,6 +62,9 @@ export function StoreSalePage() {
             ? `${error.message}. Inicia sesion en /admin/login.`
             : "Necesitas iniciar sesion admin en /admin/login."
         );
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
 
     return () => {
@@ -145,6 +150,10 @@ export function StoreSalePage() {
     } catch {
       setError("No se pudo registrar la venta fisica.");
     }
+  }
+
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (

@@ -17,6 +17,7 @@ import {
   type CatalogVariant,
   type VariantPayload
 } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 function slugify(text: string) {
   return text
@@ -74,12 +75,14 @@ export function AdminCatalogPage() {
   const [statusMessage, setStatusMessage] = useState("");
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
 
     // Load static data
-    Promise.all([getAdminCategories(), getAdminSuppliers()]).then(([cats, sups]) => {
+    const staticDataPromise = Promise.all([getAdminCategories(), getAdminSuppliers()]).then(([cats, sups]) => {
       if (!active) return;
       setCategories(cats);
       setSuppliers(sups);
@@ -92,7 +95,7 @@ export function AdminCatalogPage() {
       }
     });
 
-    getAdminProducts()
+    const productsPromise = getAdminProducts()
       .then((data) => {
         if (!active) return;
         setProducts(data);
@@ -109,6 +112,11 @@ export function AdminCatalogPage() {
         if (!active) return;
         setError(error instanceof Error ? error.message : "Error al cargar productos");
       });
+
+    Promise.all([staticDataPromise, productsPromise]).finally(() => {
+      if (active) setLoading(false);
+    });
+
     return () => { active = false; };
   }, []);
 
@@ -345,6 +353,10 @@ export function AdminCatalogPage() {
     } catch (err) {
       setError("Error al subir la imagen.");
     }
+  }
+
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (

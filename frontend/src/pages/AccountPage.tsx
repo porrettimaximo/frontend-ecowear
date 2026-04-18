@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { accountSummary as fallbackAccountSummary } from "../data/store";
 import { getCustomerAccount, getCustomerOrders, type CustomerOrder } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function AccountPage() {
   const [loading, setLoading] = useState(true);
@@ -49,13 +50,7 @@ export function AccountPage() {
     });
 
   if (loading || !accountSummary) {
-    return (
-      <main className="px-5 py-12 md:px-8 lg:px-12 flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <p className="text-[0.7rem] font-black uppercase tracking-[0.3em] text-tertiary">Cargando datos...</p>
-        </div>
-      </main>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { adminSummary as fallbackAdminSummary } from "../data/store";
 import { getAdminSummary, getSalesKpis, getSalesReport, type SalesKpis, type SalesReportRow } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function AdminDashboardPage() {
   const [adminSummary, setAdminSummary] = useState<typeof fallbackAdminSummary | null>(null);
@@ -53,16 +54,7 @@ export function AdminDashboardPage() {
   }, [kpiChannel, kpiStartDate, kpiEndDate]);
 
   if (isLoading || !adminSummary || !salesReport) {
-    return (
-      <main className="px-5 py-12 md:px-8 lg:px-12 flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center">
-          <div className="w-12 h-12 border-4 border-outline/30 border-t-tertiary rounded-full animate-spin"></div>
-          <p className="mt-4 text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-            Cargando datos...
-          </p>
-        </div>
-      </main>
-    );
+    return <LoadingSpinner />;
   }
 
   const topRows = [...salesReport]
@@ -218,7 +210,7 @@ export function AdminDashboardPage() {
         <div className="mt-8 grid gap-6 md:grid-cols-4">
           {kpisLoading ? (
             <div className="col-span-4 flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-outline/30 border-t-tertiary rounded-full animate-spin"></div>
+              <LoadingSpinner fullPage={false} />
             </div>
           ) : (
             [
@@ -245,7 +237,7 @@ export function AdminDashboardPage() {
             <div className="mt-6 space-y-4">
               {kpisLoading ? (
                 <div className="flex items-center justify-center py-6">
-                  <div className="w-6 h-6 border-4 border-outline/30 border-t-tertiary rounded-full animate-spin"></div>
+                  <LoadingSpinner fullPage={false} />
                 </div>
               ) : (kpis?.topProducts ?? []).length === 0 ? (
                 <p className="text-sm text-on-surface-variant">Sin ventas en ese rango.</p>

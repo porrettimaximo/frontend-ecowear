@@ -2,21 +2,32 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { getCustomerOrder, type CustomerOrder } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function OrderDetailPage() {
   const { orderId } = useParams();
   const [order, setOrder] = useState<CustomerOrder | null>(null);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (orderId) {
-      getCustomerOrder(orderId).then(setOrder);
+      setLoading(true);
+      getCustomerOrder(orderId)
+        .then(setOrder)
+        .finally(() => setLoading(false));
     }
   }, [orderId]);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   if (!order) {
     return (
-      <main className="px-5 py-12 md:px-8 lg:px-12">
-        <p>Cargando...</p>
+      <main className="px-5 py-12 md:px-8 lg:px-12 text-center">
+        <h2 className="font-headline text-3xl font-black uppercase tracking-tighter">Pedido no encontrado</h2>
+        <p className="mt-4 text-on-surface-variant">No pudimos encontrar la información de este pedido.</p>
       </main>
     );
   }

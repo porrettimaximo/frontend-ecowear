@@ -7,6 +7,7 @@ import {
   getCatalogProducts,
   type CatalogProduct
 } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 function getStockTone(stock: number) {
   if (stock <= 2) return "text-error";
@@ -19,6 +20,7 @@ export function ProductDetailPage() {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const [product, setProduct] = useState<CatalogProduct | undefined>();
+  const [loading, setLoading] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState<CatalogProduct[]>([]);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -30,12 +32,16 @@ export function ProductDetailPage() {
 
     let active = true;
 
+    setLoading(true);
     getCatalogProduct(slug).then((data) => {
-      if (!active || !data) return;
-
-      setProduct(data);
-      setSelectedColor(data.variants[0]?.color ?? data.colors[0] ?? "");
-      setSelectedSize(data.variants[0]?.size ?? data.sizes[0] ?? "");
+      if (!active) return;
+      
+      if (data) {
+        setProduct(data);
+        setSelectedColor(data.variants[0]?.color ?? data.colors[0] ?? "");
+        setSelectedSize(data.variants[0]?.size ?? data.sizes[0] ?? "");
+      }
+      setLoading(false);
     });
 
     getCatalogProducts().then((data) => {
@@ -52,6 +58,10 @@ export function ProductDetailPage() {
     setQuantity(1);
     setFeedback("");
   }, [selectedColor, selectedSize, slug]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   if (!product) {
     return (

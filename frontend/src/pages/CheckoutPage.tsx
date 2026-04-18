@@ -229,12 +229,21 @@ export function CheckoutPage() {
           ) : null}
 
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-            <Link
-              className="bg-inverse-surface px-8 py-4 text-[0.7rem] font-black uppercase tracking-[0.25em] text-surface hover:bg-secondary"
-              to="/account"
-            >
-              Ver mi cuenta
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                className="bg-inverse-surface px-8 py-4 text-[0.7rem] font-black uppercase tracking-[0.25em] text-surface hover:bg-secondary"
+                to="/account"
+              >
+                Ver mi cuenta
+              </Link>
+            ) : (
+              <Link
+                className="bg-inverse-surface px-8 py-4 text-[0.7rem] font-black uppercase tracking-[0.25em] text-surface hover:bg-secondary"
+                to="/login"
+              >
+                Iniciar Sesión / Registrarme
+              </Link>
+            )}
             <Link
               className="border border-inverse-surface px-8 py-4 text-[0.7rem] font-black uppercase tracking-[0.25em] hover:bg-inverse-surface hover:text-surface"
               to="/collections"

@@ -8,6 +8,7 @@ import {
   updateAdminSupplier,
   type Supplier
 } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 const initialForm = {
   name: "",
@@ -31,9 +32,11 @@ export function AdminSuppliersPage() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
     getAdminSuppliers()
       .then((data) => {
         if (!active) return;
@@ -43,6 +46,9 @@ export function AdminSuppliersPage() {
       .catch(() => {
         if (!active) return;
         setSuppliers([]);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
     return () => {
       active = false;
@@ -128,6 +134,10 @@ export function AdminSuppliersPage() {
     } catch {
       setError("No se pudo eliminar el proveedor.");
     }
+  }
+
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getCustomerProfile, updateCustomerProfile } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -71,9 +72,7 @@ export function ProfilePage() {
       </header>
 
       {loading ? (
-        <section className="border border-outline-variant/30 bg-white p-8">
-          <p className="text-sm text-on-surface-variant">Cargando perfil...</p>
-        </section>
+        <LoadingSpinner />
       ) : (
         <div className="grid gap-8 xl:grid-cols-[0.9fr_1.1fr]">
           <section className="border border-outline-variant/30 bg-white p-8">

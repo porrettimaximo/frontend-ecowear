@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { registerClient, signInAuto } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type Mode = "login" | "register";
 
@@ -14,6 +15,7 @@ export function LoginPage({ defaultMode = "login" }: { defaultMode?: Mode }) {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     if (mode === "register") {
@@ -46,6 +48,7 @@ export function LoginPage({ defaultMode = "login" }: { defaultMode?: Mode }) {
     }
 
     try {
+      setIsSubmitting(true);
       if (mode === "register") {
         await registerClient({ fullName, email: identifier, password, phone });
         navigate("/account");
@@ -56,6 +59,8 @@ export function LoginPage({ defaultMode = "login" }: { defaultMode?: Mode }) {
       navigate(response.detectedRole === "admin" ? "/admin" : "/account");
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "No se pudo iniciar sesion");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -152,11 +157,15 @@ export function LoginPage({ defaultMode = "login" }: { defaultMode?: Mode }) {
           ) : null}
 
           <div className="mt-12">
-            <button
-              className="w-full bg-inverse-surface px-8 py-5 text-center text-[0.7rem] font-black uppercase tracking-[0.35em] text-surface transition-all hover:bg-secondary active:scale-[0.98]"
-              type="submit"
+              disabled={isSubmitting}
             >
-              {mode === "register" ? "Crear cuenta ahora" : "Ingresar a mi cuenta"}
+              {isSubmitting ? (
+                <LoadingSpinner fullPage={false} />
+              ) : mode === "register" ? (
+                "Crear cuenta ahora"
+              ) : (
+                "Ingresar a mi cuenta"
+              )}
             </button>
             <p className="mt-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
               Seguridad encriptada ReWo

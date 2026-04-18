@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getCatalogProducts, type CatalogProduct } from "../lib/api";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "name";
 
 export function CollectionPage() {
   const [products, setProducts] = useState<CatalogProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedColor, setSelectedColor] = useState("all");
@@ -15,10 +17,12 @@ export function CollectionPage() {
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
 
     getCatalogProducts().then((data) => {
       if (active) {
         setProducts(data);
+        setLoading(false);
       }
     });
 
@@ -184,8 +188,11 @@ export function CollectionPage() {
           </div>
         </aside>
 
-        <div className="space-y-8">
-          {highlightProduct ? (
+          {loading ? (
+            <div className="flex min-h-[400px] items-center justify-center border border-outline-variant/30 bg-white">
+              <LoadingSpinner fullPage={false} />
+            </div>
+          ) : highlightProduct ? (
             <article className="grid overflow-hidden border border-outline-variant/30 bg-white lg:grid-cols-[1.1fr_0.9fr]">
               <div className="aspect-[5/4] overflow-hidden bg-surface-container-low">
                 <img
@@ -263,7 +270,7 @@ export function CollectionPage() {
             </article>
           ) : null}
 
-          {filteredProducts.length === 0 ? (
+          {!loading && filteredProducts.length === 0 ? (
             <section className="border border-dashed border-outline/40 bg-white px-6 py-16 text-center">
               <p className="text-[0.7rem] font-black uppercase tracking-[0.3em] text-tertiary">
                 Sin resultados
