@@ -157,6 +157,9 @@ export function LoginPage({ defaultMode = "login" }: { defaultMode?: Mode }) {
           ) : null}
 
           <div className="mt-12">
+            <button
+              className="w-full bg-inverse-surface py-5 text-[0.65rem] font-black uppercase tracking-[0.3em] text-surface transition-all hover:bg-inverse-surface/90 hover:tracking-[0.4em] disabled:opacity-50"
+              type="submit"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

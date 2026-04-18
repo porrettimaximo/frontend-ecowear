@@ -187,7 +187,7 @@ export function CollectionPage() {
             </div>
           </div>
         </aside>
-
+        <div className="space-y-8">
           {loading ? (
             <div className="flex min-h-[400px] items-center justify-center border border-outline-variant/30 bg-white">
               <LoadingSpinner fullPage={false} />
