@@ -86,6 +86,7 @@ type ApiOrderSummary = {
   shipping_city?: string | null;
   shipping_postal_code?: string | null;
   shipping_phone?: string | null;
+  promotion_label?: string | null;
   items: Array<{
     product_slug: string;
     product_name: string;
@@ -186,7 +187,7 @@ type ProductPayload = {
   initialVariants?: VariantPayload[];
 };
 
-type VariantPayload = {
+export type VariantPayload = {
   sku: string;
   size: string;
   color: string;
@@ -325,6 +326,8 @@ export type CustomerOrder = {
   shippingPostalCode?: string | null;
   shippingPhone?: string | null;
   promotionLabel?: string | null;
+  promotionDiscountTotal?: number;
+  loyaltyDiscountTotal?: number;
   discountTotalLabel?: string | null;
   items: Array<{
     productSlug: string;
@@ -490,6 +493,7 @@ function getFallbackCatalogProduct(product: MockProduct): CatalogProduct {
     sustainability: product.sustainability,
     composition: product.composition,
     category: product.featured ? "Capsula" : "Coleccion permanente",
+    totalStock: 0,
     variants: buildMockVariants(product)
   };
 }
