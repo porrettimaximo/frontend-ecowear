@@ -127,18 +127,18 @@ export const cartItems = [
 ];
 
 export const accountSummary = {
-  name: "Cargando...",
-  email: "...",
+  name: "-",
+  email: "-",
   ecoPoints: 0,
-  tier: "...",
-  nextReward: "..."
+  tier: "-",
+  nextReward: "-"
 };
 
 export const adminSummary = {
-  totalProducts: 7,
-  activePromotions: 3,
-  ethicalSuppliers: 12,
-  salesToday: "$18,540 MXN"
+  totalProducts: 0,
+  activePromotions: 0,
+  ethicalSuppliers: 0,
+  salesToday: "-"
 };
 
 export const physicalStoreDraft = {

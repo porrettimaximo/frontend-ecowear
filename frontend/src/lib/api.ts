@@ -596,7 +596,7 @@ export async function getCatalogProducts() {
     const data = await requestJson<ApiProductSummary[]>("/products");
     return data.map(mapSummary);
   } catch {
-    return mockProducts.map(getFallbackCatalogProduct);
+    return [];
   }
 }
 
@@ -605,7 +605,7 @@ export async function getCatalogProduct(slug: string) {
     const data = await requestJson<ApiProductDetail>(`/products/${slug}`);
     return mapDetail(data);
   } catch {
-    return getFallbackBySlug(slug);
+    return undefined;
   }
 }
 
@@ -751,26 +751,7 @@ export async function getSalesReport(): Promise<SalesReportRow[]> {
       revenueLabel: formatCurrency(row.total_revenue)
     }));
   } catch {
-    return [
-      {
-        productName: "Playera Eco",
-        size: "M",
-        color: "Musgo",
-        channel: "online",
-        units: 12,
-        revenue: 41400,
-        revenueLabel: formatCurrency(41400)
-      },
-      {
-        productName: "Pantalón Hemp",
-        size: "L",
-        color: "Arena",
-        channel: "store",
-        units: 5,
-        revenue: 17250,
-        revenueLabel: formatCurrency(17250)
-      }
-    ];
+    return [];
   }
 }
 
@@ -851,19 +832,7 @@ export async function getPromotions(activeOnly = true): Promise<Promotion[]> {
           : `$${promo.discount_value.toLocaleString("es-MX")} MXN`
     }));
   } catch {
-    return [
-      {
-        id: "promo-combo-temporada",
-        name: "Combo de temporada",
-        description: "-$350 MXN en compras desde $5,000 con 2 productos distintos.",
-        promotionType: "combo",
-        discountValue: 350,
-        minSubtotal: 5000,
-        minItems: 2,
-        isActive: true,
-        discountLabel: "$350 MXN"
-      }
-    ];
+    return [];
   }
 }
 
@@ -1226,11 +1195,8 @@ export async function getAdminProducts(): Promise<AdminProduct[]> {
   try {
     const data = await requestJson<ApiProductDetail[]>("/admin/products");
     return data.map(mapDetail);
-  } catch (error) {
-    if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
-      throw error;
-    }
-    return mockProducts.map(getFallbackCatalogProduct);
+  } catch {
+    return [];
   }
 }
 

@@ -6,8 +6,8 @@ import { getAdminSummary, getSalesKpis, getSalesReport, type SalesKpis, type Sal
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export function AdminDashboardPage() {
-  const [adminSummary, setAdminSummary] = useState<typeof fallbackAdminSummary | null>(null);
-  const [salesReport, setSalesReport] = useState<SalesReportRow[] | null>(null);
+  const [adminSummary, setAdminSummary] = useState<typeof fallbackAdminSummary>(fallbackAdminSummary);
+  const [salesReport, setSalesReport] = useState<SalesReportRow[]>([]);
   const [kpis, setKpis] = useState<SalesKpis | null>(null);
   const [kpiChannel, setKpiChannel] = useState<"online" | "store">("online");
   const [kpiStartDate, setKpiStartDate] = useState("2024-01-01");
@@ -53,9 +53,6 @@ export function AdminDashboardPage() {
     };
   }, [kpiChannel, kpiStartDate, kpiEndDate]);
 
-  if (isLoading || !adminSummary || !salesReport) {
-    return <LoadingSpinner />;
-  }
 
   const topRows = [...salesReport]
     .sort((left, right) => right.units - left.units)
@@ -76,16 +73,20 @@ export function AdminDashboardPage() {
 
       <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "Productos en catálogo", value: adminSummary.totalProducts.toString() },
-          { label: "Promociones y combos", value: adminSummary.activePromotions.toString() },
-          { label: "Proveedores eticos", value: adminSummary.ethicalSuppliers.toString() },
-          { label: "Ventas", value: adminSummary.salesToday }
+          { label: "Productos en catálogo", value: adminSummary.totalProducts > 0 ? adminSummary.totalProducts.toString() : "-" },
+          { label: "Promociones y combos", value: adminSummary.activePromotions > 0 ? adminSummary.activePromotions.toString() : "-" },
+          { label: "Proveedores eticos", value: adminSummary.ethicalSuppliers > 0 ? adminSummary.ethicalSuppliers.toString() : "-" },
+          { label: "Ventas", value: adminSummary.salesToday !== "-" ? adminSummary.salesToday : "-" }
         ].map((card) => (
-          <article key={card.label} className="bg-[#f2f4f4] p-8">
+          <article key={card.label} className="bg-[#f2f4f4] p-8 flex flex-col justify-between min-h-[160px]">
             <p className="text-[0.65rem] uppercase tracking-[0.3em] text-on-surface-variant">
               {card.label}
             </p>
-            <p className="mt-4 text-4xl font-black tracking-tighter">{card.value}</p>
+            {isLoading ? (
+              <div className="mt-4 h-6 w-6 animate-spin border-2 border-outline/20 border-t-inverse-surface rounded-full"></div>
+            ) : (
+              <p className="mt-4 text-4xl font-black tracking-tighter">{card.value}</p>
+            )}
           </article>
         ))}
       </section>
@@ -140,12 +141,14 @@ export function AdminDashboardPage() {
               </p>
             </div>
             <span className="text-[0.65rem] font-black uppercase tracking-[0.25em] text-tertiary">
-              {salesReport.length} filas
+              {isLoading ? "-" : `${salesReport.length} filas`}
             </span>
           </div>
 
           <div className="mt-8 space-y-4 max-h-[360px] overflow-y-auto pr-2">
-            {topRows.map((row) => (
+            {isLoading ? (
+               <div className="h-4 w-4 animate-spin border-2 border-outline/20 border-t-inverse-surface rounded-full"></div>
+            ) : topRows.map((row) => (
               <div
                 key={`${row.size}-${row.color}-${row.channel}`}
                 className="grid gap-3 border-b border-outline-variant/20 pb-4 text-sm md:grid-cols-[1fr_auto_auto]"
