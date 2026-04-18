@@ -10,8 +10,8 @@ export function AdminDashboardPage() {
   const [salesReport, setSalesReport] = useState<SalesReportRow[]>([]);
   const [kpis, setKpis] = useState<SalesKpis | null>(null);
   const [kpiChannel, setKpiChannel] = useState<"online" | "store">("online");
-  const [kpiStartDate, setKpiStartDate] = useState("2024-01-01");
-  const [kpiEndDate, setKpiEndDate] = useState(new Date().toISOString().split("T")[0]);
+  const [kpiStartDate, setKpiStartDate] = useState("");
+  const [kpiEndDate, setKpiEndDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [kpisLoading, setKpisLoading] = useState(true);
 
@@ -73,12 +73,12 @@ export function AdminDashboardPage() {
 
       <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "Productos en catálogo", value: adminSummary.totalProducts > 0 ? adminSummary.totalProducts.toString() : "-" },
-          { label: "Promociones y combos", value: adminSummary.activePromotions > 0 ? adminSummary.activePromotions.toString() : "-" },
-          { label: "Proveedores eticos", value: adminSummary.ethicalSuppliers > 0 ? adminSummary.ethicalSuppliers.toString() : "-" },
-          { label: "Ventas", value: adminSummary.salesToday !== "-" ? adminSummary.salesToday : "-" }
+          { label: "Productos en catálogo", value: adminSummary.totalProducts.toString() },
+          { label: "Promociones y combos", value: adminSummary.activePromotions.toString() },
+          { label: "Proveedores eticos", value: adminSummary.ethicalSuppliers.toString() },
+          { label: "Ventas", value: adminSummary.salesToday }
         ].map((card) => (
-          <article key={card.label} className="bg-[#f2f4f4] p-8 flex flex-col justify-between min-h-[160px]">
+          <article key={card.label} className="bg-[#f2f4f4] p-8">
             <p className="text-[0.65rem] uppercase tracking-[0.3em] text-on-surface-variant">
               {card.label}
             </p>
@@ -141,7 +141,7 @@ export function AdminDashboardPage() {
               </p>
             </div>
             <span className="text-[0.65rem] font-black uppercase tracking-[0.25em] text-tertiary">
-              {isLoading ? "-" : `${salesReport.length} filas`}
+              {isLoading ? "" : `${salesReport.length} filas`}
             </span>
           </div>
 
@@ -213,7 +213,7 @@ export function AdminDashboardPage() {
         <div className="mt-8 grid gap-6 md:grid-cols-4">
           {kpisLoading ? (
             <div className="col-span-4 flex items-center justify-center py-12">
-              <LoadingSpinner fullPage={false} />
+               <div className="h-6 w-6 animate-spin border-2 border-outline/20 border-t-inverse-surface rounded-full"></div>
             </div>
           ) : (
             [
@@ -240,7 +240,7 @@ export function AdminDashboardPage() {
             <div className="mt-6 space-y-4">
               {kpisLoading ? (
                 <div className="flex items-center justify-center py-6">
-                  <LoadingSpinner fullPage={false} />
+                  <div className="h-8 w-8 animate-spin border-4 border-outline/20 border-t-inverse-surface rounded-full"></div>
                 </div>
               ) : (kpis?.topProducts ?? []).length === 0 ? (
                 <p className="text-sm text-on-surface-variant">Sin ventas en ese rango.</p>

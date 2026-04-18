@@ -356,7 +356,11 @@ export function AdminCatalogPage() {
   }
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin border-4 border-outline/20 border-t-inverse-surface rounded-full"></div>
+      </main>
+    );
   }
 
   return (
