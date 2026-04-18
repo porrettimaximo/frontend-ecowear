@@ -19,6 +19,7 @@ import { OrderDetailPage } from "./pages/OrderDetailPage";
 import { ProductDetailPage } from "./pages/ProductDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { StoreSalePage } from "./pages/StoreSalePage";
+import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 
 function App() {
   return (
@@ -171,6 +172,7 @@ function App() {
         />
         </Routes>
       </CartProvider>
+      <PWAInstallPrompt />
     </BrowserRouter>
   );
 }
